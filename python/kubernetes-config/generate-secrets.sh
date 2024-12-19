@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Generate a random 12-byte access key and encode it with proper Base64 padding
-access_key=$(head -c 12 /dev/urandom | base64 -w 0)
+# Generate a random 12-character alphanumeric access key
+access_key=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 12)
 
-# Generate a random 24-byte secret key and encode it with proper Base64 padding
-secret_key=$(head -c 24 /dev/urandom | base64 -w 0)
+# Generate a random 24-character alphanumeric secret key
+secret_key=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 24)
 
 # Create the minio-secret.yaml file
 cat <<EOF > minio-secret.yaml
@@ -14,7 +14,7 @@ metadata:
   name: minio-secret
   namespace: default
 type: Opaque
-data:
+stringData:
   access_key: $access_key
   secret_key: $secret_key
 EOF
