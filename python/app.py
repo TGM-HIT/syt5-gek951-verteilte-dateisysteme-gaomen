@@ -22,7 +22,7 @@ minio_client = Minio(
 
 # Initialize the Flask app
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB
+app.config['MAX_CONTENT_LENGTH'] = 300 * 1024 * 1024  # 16 MB
 app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your_secret_key')  # Secret key for flash messages
 
 # Ensure bucket exists, create it if not
