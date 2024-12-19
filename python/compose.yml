@@ -1,0 +1,18 @@
+services:
+  minio:
+    image: quay.io/minio/minio
+    environment:
+      - MINIO_ACCESS_KEY=${ACCESS_KEY}
+      - MINIO_SECRET_KEY=${SECRET_KEY}
+    env_file:
+      - .env  # Explicitly load the .env file
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address :9001
+    restart: always
+
+volumes:
+  minio_data:
