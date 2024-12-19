@@ -146,6 +146,7 @@ Here, you can see that both the `flask-minio-service` and `minio-service` have b
 
 #### 1. Expose the Services (Minikube only)
 
+##### Tunnel
 If you're using **Minikube**, you'll need to tunnel the service to your local machine to access it. Run the following command:
 
 ```bash
@@ -165,6 +166,45 @@ Status:
                 minikube: no errors
                 router: no errors
                 loadbalancer emulator: no error
+```
+
+##### Port Forward
+
+```bash
+kubectl port-forward svc/flask-minio-service 8080:8080
+```
+
+##### Expose it to the internet
+
+Using a reverse proxy you can expose the service to the internet
+
+```bash
+sudo dnf install nginx
+sudo vi /etc/nginx/sites-available/default
+
+```
+
+```
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    location / {
+        proxy_pass http://${CLUSTER_IP}:${PORT};
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+Now restart test the configuration and restart the service
+
+```bash
+sudo nginx -t
+sudo systemctl restart nginx
 ```
 
 #### 2. Test the Flask-MinIO Service
